@@ -1,47 +1,47 @@
 ﻿@page "/"
-@using Models
 
 <PageTitle>Game Store</PageTitle>
 
-<table class="table table-striped table-borded table-hover">
-    <thead class="table-dark">
-        <th>Id</th>
-        <th>Name</th>
-        <th>Genre</th>
-        <th class="text-end">Price</th>
-        <th>Release Date</th>
-        <th></th>
-    </thead>
-    <tbody>
-        @foreach (var game in games)
-        {
-            <tr>
-                <td>@game.Id</td>
-                <td>@game.Name</td>
-                <td>@game.Genre</td>
-                <td class="text-end">@game.Price.ToString("C2")</td>
-                <td>@game.ReleaseDate</td>
-                <td>
+@if (games is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-striped table-borded table-hover mt-2">
+        <thead class="table-dark">
+            <th>Id</th>
+            <th>Name</th>
+            <th>Genre</th>
+            <th class="text-end">Price</th>
+            <th>Release Date</th>
+            <th></th>
+        </thead>
+        <tbody>
+            @foreach (var game in games)
+            {
+                <tr>
+                    <td>@game.Id</td>
+                    <td>@game.Name</td>
+                    <td>@game.Genre</td>
+                    <td class="text-end">@game.Price.ToString("C2")</td>
+                    <td>@game.ReleaseDate</td>
+                    <td>
 
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
 @code {
-    private GameSummary[] games = [
-        new() {
-            Id = 1, Name = "Mortal Kombat", Genre ="Fighting",
-            Price = 59.99m, ReleaseDate = new DateOnly(1992, 8, 1)
-        },
-        new() {
-            Id = 2, Name = "J-League Winning Eleven", Genre = "Sports",
-            Price = 44.99m, ReleaseDate = new DateOnly(1995, 7, 21)
-        },
-        new() {
-            Id = 3, Name = "Castlevania: Symphony of the Night", Genre = "Action",
-            Price = 51.99m, ReleaseDate = new DateOnly(1997, 3, 20)
-        }
-    ];
+    private GamesClient gamesClient = new();
+
+    private GameSummary[]? games;
+
+    protected override void OnInitialized()
+    {
+        games = gamesClient.GetGames();
+    }
 }
