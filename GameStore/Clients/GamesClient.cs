@@ -6,7 +6,7 @@ public class GamesClient
 {
     private readonly List<GameSummary> games = [
         new() {
-            Id = 1, Name = "Mortal Kombat", Genre ="Fighting",
+            Id = 1, Name = "Mortal Kombat", Genre = "Fighting",
             Price = 59.99m, ReleaseDate = new DateOnly(1992, 8, 1)
         },
         new() {
@@ -38,5 +38,26 @@ public class GamesClient
         };
 
         games.Add(gameSummary);
+    }
+
+    public GameDetails GetGame(int id)
+    {
+        var game = games.Find(game => game.Id == id);
+        ArgumentNullException.ThrowIfNull(game);
+
+        var genre = genres.Single(genre => string.Equals(
+            genre.Name,
+            game.Name,
+            StringComparison.OrdinalIgnoreCase
+        ));
+
+        return new GameDetails
+        {
+            Id = game.Id,
+            Name = game.Name,
+            GenreId = genre.Id.ToString(),
+            Price = game.Price,
+            ReleaseDate = game.ReleaseDate
+        };
     }
 }
